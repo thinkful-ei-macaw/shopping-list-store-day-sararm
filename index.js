@@ -1,3 +1,6 @@
+'use strict';
+/* eslint-disable indent */
+
 const store = {
   items: [
     { id: cuid(), name: 'apples', checked: false },
@@ -5,7 +8,8 @@ const store = {
     { id: cuid(), name: 'milk', checked: true },
     { id: cuid(), name: 'bread', checked: false }
   ],
-  hideCheckedItems: false
+  hideCheckedItems: false,
+  renamingItem: false
 };
 
 const generateItemElement = function (item) {
@@ -26,6 +30,9 @@ const generateItemElement = function (item) {
         <button class='shopping-item-delete js-item-delete'>
           <span class='button-label'>delete</span>
         </button>
+        <button class='shopping-item-rename js-item-rename'>
+        <span class='button-label'>rename item</span>
+      </button>
       </div>
     </li>`;
 };
@@ -50,6 +57,7 @@ const render = function () {
   if (store.hideCheckedItems) {
     items = items.filter(item => !item.checked);
   }
+  
 
   /**
    * At this point, all filtering work has been 
@@ -145,6 +153,24 @@ const handleToggleFilterClick = function () {
   });
 };
 
+const toggleRenamePrompt = function (id) {
+  let newName = prompt('What is the new name?');
+  renameListItem(newName, id);
+};
+
+const renameListItem = function (newName, id){
+  const index = store.items.findIndex(item => item.id === id);
+  store.items[index].name = newName;
+};
+
+const handleRenameItemClick = function () {
+  $('.js-item-rename').click(() => {
+    const id = getItemIdFromElement(event.currentTarget);
+    toggleRenamePrompt(id);
+    render();
+});
+};
+
 /**
  * This function will be our callback when the
  * page loads. It is responsible for initially 
@@ -160,6 +186,7 @@ const handleShoppingList = function () {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleFilterClick();
+  handleRenameItemClick();
 };
 
 // when the page loads, call `handleShoppingList`
