@@ -164,7 +164,7 @@ const renameListItem = function (newName, id){
 };
 
 const handleRenameItemClick = function () {
-  $('.js-item-rename').click(() => {
+  $('.js-shopping-list').on('click', '.js-item-rename', event => {
     const id = getItemIdFromElement(event.currentTarget);
     toggleRenamePrompt(id);
     render();
